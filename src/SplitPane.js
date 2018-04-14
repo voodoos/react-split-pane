@@ -167,7 +167,7 @@ class SplitPane extends Component {
 
   onMouseUp() {
     log(`onMouseUp`);
-    const { split } = this.props;
+    const { split, onDragFinished } = this.props;
     const { active } = this.state;
     const dimensions = this.getPaneDimensions();
     const node = findDOMNode(this.splitPane);
@@ -175,6 +175,10 @@ class SplitPane extends Component {
     const { ratios, sizes } = paneSize(split, dimensions, splitPaneDimensions);
 
     if (active) {
+      if (typeof onDragFinished === 'function') {
+        // v1 DragFinished expected dragSize as an argument
+        onDragFinished(/* draggedSize */);
+      }
       this.setState({
         active: false,
         dimensions,
@@ -399,6 +403,7 @@ SplitPane.propTypes = {
   className: PropTypes.string,
   split: PropTypes.oneOf(['vertical', 'horizontal']),
   resizerSize: PropTypes.number,
+  onDragFinished: PropTypes.func,
 };
 
 SplitPane.defaultProps = {
